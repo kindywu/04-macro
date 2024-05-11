@@ -9,6 +9,9 @@ pub fn derive_enum_from(input: TokenStream) -> TokenStream {
     // get the ident
     let ident = input.ident;
 
+    // get generics
+    let generics = input.generics;
+
     // get enum variants
     let variants = match input.data {
         syn::Data::Enum(data) => data.variants,
@@ -28,7 +31,7 @@ pub fn derive_enum_from(input: TokenStream) -> TokenStream {
                     quote! {
                         // ty=DirectionUp #ident=Direction #var=Up
                         // ty=i32 #ident=Direction #var=Down
-                        impl From<#ty> for #ident {
+                        impl #generics From<#ty> for #ident #generics {
                             fn from(v: #ty) -> Self {
                                 #ident::#var(v)
                             }
