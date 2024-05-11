@@ -1,9 +1,10 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::DeriveInput;
+use syn::{Data, DeriveInput};
 
 pub(crate) fn process_enum_from(input: TokenStream) -> TokenStream {
     let input: DeriveInput = syn::parse_macro_input!(input as syn::DeriveInput);
+
     // println!("{:#?}", input);
     // get the ident
     let ident = input.ident;
@@ -13,7 +14,7 @@ pub(crate) fn process_enum_from(input: TokenStream) -> TokenStream {
 
     // get enum variants
     let variants = match input.data {
-        syn::Data::Enum(data) => data.variants,
+        Data::Enum(data) => data.variants,
         _ => panic!("EnumFrom only works on enums"),
     };
 
