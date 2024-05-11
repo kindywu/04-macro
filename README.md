@@ -8,3 +8,8 @@
 - git remote add origin https://github.com/kindywu/04-macro.git
   git branch -M main
   git push -u origin main
+
+# 查看宏运行
+
+- cargo install cargo-expand
+- cargo expand --example enum_macro
