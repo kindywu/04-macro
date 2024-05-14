@@ -39,7 +39,6 @@ pub(crate) fn process_enum_from(input: TokenStream) -> TokenStream {
                     }
                 }
             }
-
             _ => quote! {},
         }
     });
