@@ -70,3 +70,33 @@ pub(crate) fn process_enum_from_darling(input: TokenStream) -> TokenStream {
     }
     .into()
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_enum_from_darling() {
+        let derive_input = syn::parse_str(
+            r#"
+            #[derive(Debug, EnumFromDarling)]
+            #[allow(dead_code)]
+            enum Direction {
+                Up(DirectionUp),
+                Down(i32),
+            }
+        "#,
+        )
+        .unwrap();
+
+        let EnumFromDarling {
+            ident,
+            generics,
+            data,
+        } = EnumFromDarling::from_derive_input(&derive_input).unwrap();
+        println!("{:#?}", generics);
+        // println!("{:#?}", data);
+        assert_eq!(ident, "Direction");
+        assert!(data.is_enum());
+    }
+}
