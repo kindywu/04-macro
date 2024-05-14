@@ -24,27 +24,27 @@ struct EnumVariantFields {
 }
 
 pub(crate) fn process_enum_from_darling(input: TokenStream) -> TokenStream {
-    let input = syn::parse_macro_input!(input as syn::DeriveInput);
-
-    // let EnumFromDarling {
-    //     ident,
-    //     generics,
-    //     data: Data::Enum(data),
-    // } = EnumFromDarling::from_derive_input(&input).expect("can not parse input")
-    // else {
-    //     panic!("EnumFromDarling only works on enums");
-    // };
+    let input = syn::parse_macro_input!(input);
 
     let EnumFromDarling {
         ident,
         generics,
-        data,
-    } = EnumFromDarling::from_derive_input(&input).expect("can not parse input");
-
-    let variants = match data {
-        Data::Enum(data) => data,
-        _ => panic!("EnumFromDarling only works on enums"),
+        data: Data::Enum(variants),
+    } = EnumFromDarling::from_derive_input(&input).expect("can not parse input")
+    else {
+        panic!("EnumFromDarling only works on enums");
     };
+
+    // let EnumFromDarling {
+    //     ident,
+    //     generics,
+    //     data,
+    // } = EnumFromDarling::from_derive_input(&input).expect("can not parse input");
+
+    // let variants = match data {
+    //     Data::Enum(data) => data,
+    //     _ => panic!("EnumFromDarling only works on enums"),
+    // };
 
     let from_impls = variants.iter().map(|variant| {
         let var = &variant.ident;
@@ -73,6 +73,8 @@ pub(crate) fn process_enum_from_darling(input: TokenStream) -> TokenStream {
 
 #[cfg(test)]
 mod test {
+    use core::panic;
+
     use super::*;
 
     #[test]
@@ -89,14 +91,25 @@ mod test {
         )
         .unwrap();
 
-        let EnumFromDarling {
+        if let EnumFromDarling {
             ident,
             generics,
-            data,
-        } = EnumFromDarling::from_derive_input(&derive_input).unwrap();
-        println!("{:#?}", generics);
-        // println!("{:#?}", data);
-        assert_eq!(ident, "Direction");
-        assert!(data.is_enum());
+            data: Data::Enum(variants),
+        } = EnumFromDarling::from_derive_input(&derive_input).unwrap()
+        {
+            println!("{:#?}", generics);
+            // println!("{:#?}", variants);
+            assert_eq!(ident, "Direction");
+            let mut variants = variants.iter();
+            match (variants.next(), variants.next()) {
+                (Some(up), Some(down)) => {
+                    assert_eq!(up.ident, "Up");
+                    assert_eq!(down.ident, "Down");
+                }
+                _ => panic!("Here we should get two fields (up and down)"),
+            }
+        } else {
+            panic!("EnumFromDarling only works on enums");
+        }
     }
 }

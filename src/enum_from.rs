@@ -3,7 +3,7 @@ use quote::quote;
 use syn::{Data, DeriveInput};
 
 pub(crate) fn process_enum_from(input: TokenStream) -> TokenStream {
-    let input: DeriveInput = syn::parse_macro_input!(input as syn::DeriveInput);
+    let input: DeriveInput = syn::parse_macro_input!(input);
 
     // println!("{:#?}", input);
     // get the ident
