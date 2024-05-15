@@ -4,10 +4,10 @@ use macros::AutoDebug;
 
 #[derive(AutoDebug)]
 // #[derive(std::fmt::Debug)]
-pub struct RespResult<T: Debug> {
+pub struct RespResult<T: Debug, U> {
     code: u16,
     #[debug(skip)]
-    inner_code: u16,
+    inner_code: U,
     value: T,
 }
 // #[derive(std::fmt::Debug)]
