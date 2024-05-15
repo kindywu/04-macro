@@ -1,12 +1,14 @@
+use std::fmt::Debug;
+
 use macros::AutoDebug;
 
 #[derive(AutoDebug)]
 // #[derive(std::fmt::Debug)]
-pub struct RespResult {
+pub struct RespResult<T: Debug> {
     code: u16,
     #[debug(skip)]
     inner_code: u16,
-    value: String,
+    value: T,
 }
 // #[derive(std::fmt::Debug)]
 // #[automatically_derived]

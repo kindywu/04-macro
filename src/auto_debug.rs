@@ -38,8 +38,13 @@ pub(crate) fn process_auto_debug(input: TokenStream) -> TokenStream {
         }
     });
 
+    let mut generics_without_bound = generics.clone();
+    generics_without_bound
+        .type_params_mut()
+        .for_each(|tp| tp.bounds.clear());
+
     quote! {
-        impl #generics core::fmt::Debug for #ident #generics {
+        impl #generics core::fmt::Debug for #ident #generics_without_bound {
             fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result{
                 f.debug_struct(stringify!(#ident))
                 #(#fields)*
