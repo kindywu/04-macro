@@ -1,6 +1,8 @@
+mod auto_deref;
 mod enum_from;
 mod enum_from_darling;
 
+use auto_deref::process_auto_deref;
 use enum_from::process_enum_from;
 use enum_from_darling::process_enum_from_darling;
 use proc_macro::TokenStream;
@@ -13,4 +15,9 @@ pub fn derive_enum_from(input: TokenStream) -> TokenStream {
 #[proc_macro_derive(EnumFromDarling)]
 pub fn derive_enum_from_darling(input: TokenStream) -> TokenStream {
     process_enum_from_darling(input)
+}
+
+#[proc_macro_derive(AutoDefef, attributes(deref))]
+pub fn derive_auto_defef(input: TokenStream) -> TokenStream {
+    process_auto_deref(input)
 }
